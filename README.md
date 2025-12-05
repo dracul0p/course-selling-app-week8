@@ -1,7 +1,9 @@
 ## Create a course selling app
+
 - Initialize a new Node. js project
 - Add Express, jsonwebtoken to it as a dependency
 - Create index.js
+
 - Add route skeleton for user login, signup, purchase a course, see all course  , sees purchased coureces
 - Add routes for admin login, admin signup, create a course, delete a course,add course content. 
 - Add middlewares for user and admin auth~/Projects/cohort3/week-8-course-selling-app/
