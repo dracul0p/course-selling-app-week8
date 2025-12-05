@@ -1,5 +1,7 @@
 const Router = require("express").Router;
 
+const {adminModel} = require("../db");
+
 const adminRouter = Router();
 
 

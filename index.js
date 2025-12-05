@@ -4,6 +4,9 @@ const express = require("express");
 const { courseRouter } = require("./routes/course");
 const { userRouter } = require("./routes/user");
 const { adminRouter } = require("./routes/admin");
+
+// const {courseModel} = require("./db");
+
 // const {courseRoutes} = require("./routes/course");
 // const {userRoutes} = require("./routes/user");
 
