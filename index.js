@@ -30,11 +30,10 @@ app.post("/user/signin", (req, res) => {
   const { username, password } = req.body;
 });
 
-
 // all user purchased courses
 app.get("/user/purchases", (req, res) => {
   res.json({
-    msg: "User purchased course",
+    msg: "User purchased courses",
   });
 });
 
@@ -45,8 +44,6 @@ app.post("/course/purchase", (req, res) => {
     msg: "User purchased course",
   });
 });
-
-
 
 app.get("/courses", (req, res) => {
    res.json({
