@@ -5,17 +5,27 @@ const {Router} = require("express");
 const userRouter = Router();
 
 userRouter.post("/signup", (req, res) => {
+  console.log("REQ BODY:", req.body); // check what Express sees
     const { email, password, name } = req.body;
 
     console.log(email);
 
     res.json({
+         ans : req.body,
       msg: "User signed up successfully",
     });
   });
 
   userRouter.post("/signin", (req, res) => {
-    const { username, password } = req.body;
+    console.log("REQ BODY:", req.body); // check what Express sees
+    const { email, password, name } = req.body;
+
+    console.log(email);
+
+    res.json({
+      ans : req.body,
+      msg: "User signed in successfully",
+    });
   });
 
   // all user purchased courses
