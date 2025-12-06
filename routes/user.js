@@ -1,44 +1,92 @@
 // const express = require("express");
 // const router = express.Router();
 
-const {Router} = require("express");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const { JWT_USER_SECRET } = require("../config");
+
+const { Router } = require("express");
+
 const userRouter = Router();
 
-userRouter.post("/signup", (req, res) => {
-  console.log("REQ BODY:", req.body); // check what Express sees
-    const { email, password, name } = req.body;
+const { userModel } = require("../db");
 
-    console.log(email);
+userRouter.post("/signup", async (req, res) => {
+  //console.log("REQ BODY:", req.body); // check what Express sees
+  const { email, password, firstname, lastname } = req.body;
 
-    res.json({
-         ans : req.body,
-      msg: "User signed up successfully",
-    });
+  // console.log(email);
+
+  if (!email || !password || !firstname || !lastname) {
+    return res.status(400).json({ msg: "All fields are required" });
+  }
+
+  const existingUser = await userModel.findOne({ email });
+  if (existingUser) {
+    return res.status(400).json({ msg: "User email already exists" });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const newUser = new userModel({
+    email,
+    password: hashedPassword,
+    firstname,
+    lastname,
   });
 
-  userRouter.post("/signin", (req, res) => {
-    console.log("REQ BODY:", req.body); // check what Express sees
-    const { email, password, name } = req.body;
+  await newUser.save();
 
-    console.log(email);
+  res.status(201).json({
+    msg: "User signed up successfully",
+    // user: newUser,
+  });
+});
 
-    res.json({
-      ans : req.body,
-      msg: "User signed in successfully",
-    });
+userRouter.post("/signin", async (req, res) => {
+  // console.log("REQ BODY:", req.body); // check what Express sees
+  const { email, password } = req.body;
+  // console.log(email);
+  if (!email || !password) {
+    return res.status(400).json({ msg: "Email and password are required" });
+  }
+
+  const user = await userModel.findOne({
+    email,
   });
 
-  // all user purchased courses
-  userRouter.get("/purchases", (req, res) => {
-    res.json({
-      msg: "User purchased courses now",
-    });
+  if (!user) {
+    return res
+      .status(404)
+      .json({ msg: "User not found or email does not exist" });
+  }
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordValid) {
+    return res.status(401).json({ msg: "Invalid password" });
+  }
+
+  const token = jwt.sign({ id: user._id }, JWT_USER_SECRET, {
+    expiresIn: "1h",
   });
+
+  res.json({
+    msg: "User signed in successfully",
+    token,
+  });
+});
+
+// all user purchased courses
+userRouter.get("/purchases", (req, res) => {
+  res.json({
+    msg: "User purchased courses now",
+  });
+});
 
 module.exports = {
   userRouter: userRouter,
-}
-
+};
 
 /*
 function userRoutes(app) {
@@ -70,5 +118,3 @@ module.exports = {
 };
 
 */
-
-
