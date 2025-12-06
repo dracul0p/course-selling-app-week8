@@ -88,30 +88,52 @@ adminRouter.post("/signin", async (req, res) => {
 
 //create a  new course
 adminRouter.post("/course", adminMiddleware, async (req, res) => {
-  const adminId = req.userId;
+  const adminId = req.adminId;
 
-  const { title, description, price, imgeUrl } = req.body;
+  const { title, description, price, imageUrl } = req.body;
 
   const course = await courseModel.create({
     title,
     description,
     price,
-    imgeUrl,
+    imageUrl,
     creatorId: adminId,
   });
 
   res.json({ msg: "Course created successfully", courseId: course._id });
-
 });
 
 //update exixting course  || change price and image of course or content.
-adminRouter.put("/course", (req, res) => {
-  
+adminRouter.put("/course", adminMiddleware, async (req, res) => {
+  const adminId = req.adminId;
+
+  const { title, description, price, imageUrl, courseId } = req.body;
+
+  const course = await courseModel.updateOne(
+    {
+      _id: courseId,
+      creatorId: adminId,
+    },
+    {
+      title,
+      description,
+      price,
+      imageUrl,
+    }
+  );
+
+  res.json({ msg: "Course updated successfully", course });
 });
 
 //get all courses i have created
-adminRouter.get("/course/bulk", (req, res) => {
-  res.json({ msg: "All courses created by admin" });
+adminRouter.get("/course/bulk", adminMiddleware, async (req, res) => {
+  const adminId = req.adminId;
+
+  const course = await courseModel.find({
+    creatorId: adminId,
+  });
+
+  res.json({ msg: "All courses created by admin", courses: course });
 });
 
 module.exports = {
