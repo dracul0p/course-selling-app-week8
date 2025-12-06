@@ -30,6 +30,7 @@ app.get("/", (req, res) => {
   res.send("Server is running 🚀");
 });
 
+
 async function startServer() {
   await mongoose.connect(process.env.MONGO_URI);
   // Start server

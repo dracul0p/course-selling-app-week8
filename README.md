@@ -10,7 +10,8 @@
 
 - Define the schema for User, Admin, Course, Purchase
 
-- Add middlewares for user and admin auth~/Projects/cohort3/week-8-course-selling-app/
+- Add middlewares for user and admin auth
+
 - Add a database (mongodb) , use dotenv to store the vuruuuutpackage.json . UntrackedLow string
 - Complete the routes for user login, signup, purchase a course, see course (E)
 better structure your routes)
