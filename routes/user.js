@@ -86,12 +86,16 @@ userRouter.get("/purchases", userMiddleware, async (req, res) => {
 
   const purchases = await purchaseModel.find({ userId });
 
-  // console.log(purchases);  //array of objects
+  // console.log(purchases); //array of objects
 
-  // let purchasedCourseId = [];
+  // let purchasedCourseIds = [];
   // for (let i = 0; i <= purchases.length; i++) {
-  //   purchasedCourseId.push(purchases[i].courseId);
+  //   purchasedCourseIds.push(purchases[i].courseId);
   // }
+
+  // const courseData1 = await courseModel.find({
+  //   _id: { $in: purchasedCourseIds },
+  // });
 
   const courseData = await courseModel.find({
     _id: { $in: purchases.map((x) => x.courseId) },
@@ -101,7 +105,7 @@ userRouter.get("/purchases", userMiddleware, async (req, res) => {
     purchases: purchases,
 
     courseData,
-    
+
     msg: "User purchased courses now",
   });
 });
