@@ -1,28 +1,38 @@
 const express = require("express");
+const { userMiddleware } = require("../middelware/user");
+const { purchaseModel, courseModel } = require("../db");
 const courseRouter = express.Router();
 
 //buy a course
- courseRouter.post("/purchase", (req, res) => {
-    //you would extract user to pay money
-    res.json({
-      msg: "User purchased course",
-    });
+courseRouter.post("/purchase", userMiddleware, async (req, res) => {
+  const userId = req.userId;
+  const courseId = req.body.courseId;
+  const purchase = await purchaseModel.create({
+    userId,
+    courseId,
+  });
+
+  //you would extract user to pay money
+  res.json({
+    msg: "User purchased course",
   });
   
+});
 
-  //see what courses exists
-  courseRouter.get("/preview", (req, res) => {
-    res.json({
-      msg: "all cources fetched",
-    });
+//see what courses exists and without login || all courses in db or in website
+courseRouter.get("/preview", async (req, res) => {
+  const courses = await courseModel.find({});
 
+  res.json({
+    courses: courses,
+    msg: "all cources fetched",
   });
 
+});
 
 module.exports = {
-  courseRouter : courseRouter
-}
-
+  courseRouter: courseRouter,
+};
 
 /*
 function courseRoutes(app) {
@@ -47,4 +57,3 @@ module.exports = {
 }
 
 */
-
