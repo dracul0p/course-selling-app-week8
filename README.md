@@ -16,3 +16,11 @@
 - Complete the routes for user login, signup, purchase a course, see course (E)
 better structure your routes)
 - Create the frontend
+
+
+
+good to have :---------->
+use cookies instead of jwt fo auth ,
+add a rate limiting middleware ,
+frontend in ejs 
+front end in react

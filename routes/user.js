@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const { userMiddleware } = require("../middelware/user");
-const { purchaseModel } = require("../db");
+const { purchaseModel, courseModel } = require("../db");
 
 const { JWT_USER_SECRET } = require("../config");
 
@@ -85,8 +85,23 @@ userRouter.get("/purchases", userMiddleware, async (req, res) => {
   const userId = req.userId;
 
   const purchases = await purchaseModel.find({ userId });
+
+  // console.log(purchases);  //array of objects
+
+  // let purchasedCourseId = [];
+  // for (let i = 0; i <= purchases.length; i++) {
+  //   purchasedCourseId.push(purchases[i].courseId);
+  // }
+
+  const courseData = await courseModel.find({
+    _id: { $in: purchases.map((x) => x.courseId) },
+  });
+
   res.json({
     purchases: purchases,
+
+    courseData,
+    
     msg: "User purchased courses now",
   });
 });
